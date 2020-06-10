@@ -6,6 +6,7 @@ import {
 } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import DishDetail from './DishdetailComponent'
+import { Loading } from './LoadingComponent';
 
 function RenderMenuItem({ dish, onClick }) {
     return (
@@ -20,23 +21,31 @@ function RenderMenuItem({ dish, onClick }) {
     );
 }
 
-class Menu extends Component {
+const Menu = (props) => {
+    console.log(props.dishes)
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            selectedDish: null
-        };
-    }
-    onDishSelect(dish) {
-        this.setState({
-            selectedDish: dish
-        })
-    }
-
-    render() {
-
-        const menu = this.props.dishes.map((dish) => {
+        const menu = props.dishes.dishes.map((dish) => {
+            if (props.dishes.isLoading) {
+                return(
+                    <div className="container">
+                        <div className="row">            
+                            <Loading />
+                        </div>
+                    </div>
+                );
+            }
+            else if (props.dishes.errMess) {
+                return(
+                    <div className="container">
+                        <div className="row"> 
+                            <div className="col-12">
+                                <h4>{props.dishes.errMess}</h4>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+            else
             return (
                 <div className="col-12 col-md-5 m-1" key={dish.id}>
                     <RenderMenuItem dish={dish}/>
@@ -61,7 +70,6 @@ class Menu extends Component {
                 </div>
             </div>
         );
-    }
 }
 
 export default Menu;
